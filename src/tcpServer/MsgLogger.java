@@ -15,9 +15,18 @@ public class MsgLogger {
 	private Logger logger;
 	// Simple file logging handler
 	private FileHandler fh;
-	// absolute logging file path
-	private String LOG_DIR = "C:/Temp";
-	private String LOG_PATH = "C:/Temp/motion_log.log";
+	// Abstract logging path
+	private String LOG_DIR = "";
+	private String LOG_PATH = "";
+	// Absolute windows logging path
+	private String WIN_LOG_DIR = "C:/Temp";
+	private String WIN_LOG_PATH = "C:/Temp/motion_log.log";
+	// Absolute unix logging path
+//	private String UNIX_LOG_DIR = "/home/artiom";
+//	private String UNIX_LOG_PATH = "/home/artiom/motion_log.log";
+	private String UNIX_LOG_DIR = "/var/log";
+	private String UNIX_LOG_PATH = "/var/log/motion_log.log";
+	private boolean is_win = false;
 	
 	MsgLogger() {
 		// Initilize logger
@@ -28,8 +37,10 @@ public class MsgLogger {
 	// Initilize logging 
 	private void init_logging() {
 		try {
-			// Check if directory exists
+			// Some preparations
+		    check_distro();
 			check_dir();
+			
 			fh = new FileHandler(LOG_PATH, true);
 			logger.addHandler(fh);
 	        SimpleFormatter formatter = new SimpleFormatter();  
@@ -43,22 +54,27 @@ public class MsgLogger {
 		}
 	}
 	
-	// Check if LOG_DIR exists
+	// Check if *_LOG_DIR exists
 	private void check_dir() {
-		(new File(LOG_DIR)).mkdir();
+	    (new File(WIN_LOG_DIR)).mkdir();
+	}
+	
+	// Check PC distribution
+	private void check_distro() { 
+	    String distro_name = System.getProperty("os.name");
+	    if (distro_name == "Windows") {
+	        LOG_DIR = WIN_LOG_DIR;
+	        LOG_PATH = WIN_LOG_PATH;
+	        is_win = true;
+	    } else {
+	        LOG_DIR = UNIX_LOG_DIR;
+	        LOG_PATH = UNIX_LOG_PATH;
+	        is_win = false;
+	    }
 	}
 	
 	// Write log to file
 	public void write_log(String log) {
 		logger.info(log);
-	}
-	
-	/*
-	 * Chto dolzhen delatj MsgLogger
-	 * Proveritj sozdana li papka Temp?
-	 * Zapisovatj/Popolniatj informaciju done
-	 */
-	
-	
-	
+	}	
 }
