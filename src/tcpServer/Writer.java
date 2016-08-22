@@ -43,13 +43,13 @@ public abstract class Writer {
     
     protected void check_distro() {
         String distro_name = System.getProperty("os.name");
-        if (distro_name == "Windows") {
+        if (distro_name.contains("Windows")) {
             // Log
             LOG_DIR = WIN_LOG_DIR;
             LOG_PATH = WIN_LOG_PATH;
             // Csv
             CSV_DIR = WIN_CSV_DIR;
-            CSV_PATH = "WIN_CSV_PATH";
+            CSV_PATH = WIN_CSV_PATH;
             is_win = true;
         } else {
             // Log
